@@ -16,7 +16,7 @@
 
 ### 实际实现方式
 
-明密文长度太长, 为加快速度减少成本, 通常采用取[杂凑值](../杂凑函数/杂凑函数综述.md)的方法.  
+明密文长度太长, 为加快速度减少成本, 通常采用取[杂凑值](../../杂凑函数/杂凑函数综述.md)的方法.  
 除此之外, 采用哈希值, 长度易控制, 并且有很好的抗碰撞性.
 
 签名流程:
@@ -54,7 +54,8 @@ $$A\longrightarrow E_{SK_{A}} \longrightarrow E_{PK_{B}}\longrightarrow D_{SK_{B
 **如果使用先加密再签名**, 对于RSA签名, 存在一种攻击方法:   
 这种攻击的危险性在于, m可能是某种授权信息, 一旦获得Alice签名, 就不能抵赖. 而伪造的$m_{1}$却仅仅是随机数而已. 
 
-Suppose you want to obtain the signature $s = m^d \bmod n$ on a chosen message $m$. Here is that attack.
+***
+ Suppose you want to obtain the signature $s = m^d \bmod n$ on a chosen message $m$. Here is that attack.
 
 1.  You ask the signer to sign a random message $m_1$ and obtain the corresponding signature $s_1 = m_1^d \bmod n$;
 2.  You compute message $m_2 := m\cdot m_1^{-1} \bmod n$ and ask the signer to sign message $m_2$; you obtain the signature $s_2 = m_2^d \bmod n$.
@@ -62,8 +63,6 @@ Suppose you want to obtain the signature $s = m^d \bmod n$ on a chosen message $
 From the pairs $(m_1,s_1)$ and $(m_2,s_2)$, the signature $s$ on chosen message $m$ can be recovered as $s = s_1 \cdot s_2 \bmod n$.
 
 To see it, observe that $s \equiv s_1 \cdot s_2 \equiv m_1^d \cdot m_2^d \equiv m_1^d \cdot (m\cdot m_1^{-1})^d \equiv m_1^d \cdot m^d \cdot m_1^{-d} \equiv m^d \pmod n$.
-
-___
 
 Note that you could obtain the signature on message $m$ by only asking **one** signature to the signer. Indeed, you can construct the pair $(m_1,s_1)$ in Step 1 above by yourself as follows: choose a random $s_1$ modulo $n$ and define $m_1 = s_1^e \bmod n$ (where $e$ is the public verification exponent). We then have $m_1^d \equiv s_1 \pmod n$ as required.
 

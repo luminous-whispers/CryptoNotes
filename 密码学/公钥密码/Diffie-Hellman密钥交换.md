@@ -4,7 +4,10 @@
 DH算法是第一个公开的非对称加密算法, 但只被设计用于密钥交换, 没有实现加密.   
 DH算法安全性基于**[有限域离散对数困难问题](../../代数/欧拉定理.md)**
 
+#重点
+
 ## DH 密钥交换描述
+
 Alice 和 Bob 协商密钥, 但信道并不安全  
 1. Alice 选择随机数 $x$,  计算 $\mathbb{X}\equiv\alpha^{x}\pmod p$, 并将 $(\mathbb{X}\text{ , }\alpha\text{ , p})$ 公开
 2. Bob 同样执行上述操作, 选择 $y$, 公开 $\mathbb{Y}\equiv\alpha^{y}\pmod p$
