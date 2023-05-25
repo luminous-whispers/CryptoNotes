@@ -220,7 +220,7 @@ def key_expansion(in_key):
     for i in range(c.Nk, c.Nb * (c.Nr+1)):
         tmp = words[i-1] #! 复制了地址，可变类型不复制对象，后面被坑了
         if (i % c.Nk) == 0:
-            tmp = xor_word(sub_word(rot_word(tmp[:])), bytearray.fromhex(hex(c.Rcon[i//c.Nk-1])[2:].zfill(8)))
+            tmp = xor_word(sub_word(rot_word(tmp[:])), c.Rcon[i//c.Nk-1])
         elif (c.Nk > 6) and (i % c.Nk == 4): #为了向后兼容更高位加密
             tmp = sub_word(tmp[:])
         words.append(xor_word(words[i-c.Nk], tmp))
@@ -237,8 +237,11 @@ Nb = 4
 Nr = 10
 
 Rcon = [
-    0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000,
-    0x20000000, 0x40000000, 0x80000000, 0x1b000000, 0x36000000] 
+    b'\x01\x00\x00\x00', b'\x02\x00\x00\x00', 
+    b'\x04\x00\x00\x00', b'\x08\x00\x00\x00', 
+    b'\x10\x00\x00\x00', b'\x20\x00\x00\x00', 
+    b'\x40\x00\x00\x00', b'\x80\x00\x00\x00', 
+    b'\x1b\x00\x00\x00', b'\x36\x00\x00\x00'] 
 
 mix_matrix = (
     (2, 1, 1, 3),
@@ -302,8 +305,8 @@ $c\left(x\right)\\=a(x)*b(x)\\=c_6x^6+c_5x^5+c_4x^4+c_3x^3+c_2x^2+c_1x+c_0$
 
 
 $\begin{cases}c_0=a_0\ast b_0\\ c_6=a_3\ast b_3\\ c_1=a_1\ast b_0\oplus a_0\ast b_1\\c_5=a_3\ast b_2\oplus a_2\ast b_3\\c_2=a_2\ast b_0\oplus a_1\ast b_1\oplus a_0\ast b_2\\ c_4=a_3\ast b_1\oplus a_2\ast b_2\oplus a_1\ast b_3\\ c_3=a_3\ast b_0\oplus a_2\ast b_1\oplus a_1\ast b_2\oplus a_0\ast b_3\end{cases}$
-$
-d\left(x\right)\\=c\left(x\right)mod\left(x^4+1\right)\\=c_3x^3+\left(c_6\oplus c_2\right)x^2+\left(c_5\oplus c_1\right)x+\left(c_4\oplus c_0\right)$
+
+$d\left(x\right)\\=c\left(x\right)mod\left(x^4+1\right)\\=c_3x^3+\left(c_6\oplus c_2\right)x^2+\left(c_5\oplus c_1\right)x+\left(c_4\oplus c_0\right)$
 
 > **后续改成链接， 有限域运算改成单独章节**
 
