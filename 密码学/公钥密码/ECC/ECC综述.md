@@ -22,25 +22,24 @@ ECDH (Elliptic Curve Diffie-Hellman Protocol) 基于ECC实现的DH密钥交换�
 
 ### ECC 数字签名
 
-椭圆曲线签名算法 (ECDSA), ***还未找到该方法来源..., 这里也乘了x, 为什么?***
+椭圆曲线签名算法 (ECDSA)
 
 设私钥$d$, 公钥$P=[d]G$, 基点G
 
 私钥签名:  
-- 选择随机数r, 计算$[r]G$
-- $sign=\frac{hash(M)+dx}{r}$. 其中, M代表消息
-- 将消息M 和 签名$\{\ [r]G, sign\ \}$ 发送
+- 选择随机数r, 计算$[r]G$. 其中 $r\in [1,\ n-1]$, n为G的阶
+- 令 $x,y=[r]G$, 若 $x=0\pmod n$, 则重选r
+- $s=r^{-1}(hash(M)+dx)$. 其中, M代表消息. 若 $s=0\pmod n$, 则重选r
+- 将消息M 和 签名$\{\ x, s\ \}$ 发送
 
 公钥验签:
-- 计算 $tmp = \frac{[hash(M)]G+[x]P}{sign}$
-- 比较 $tmp$ 和 $[r]G$, 相等则验证成功
+- 检查 $r,\ s\in [1,\ n-1]$
+- 计算 $x',\ y' = s^{-1}([hash(M)]G+[x]P)$
+- 验证 $x'\equiv x$
 
-原理: $\frac{[hash(M)]G+[x]P}{sign}=\frac{[hash(M)+xd]G}{sign}=rG$
+原理: $\frac{[hash(M)]G+[x]P}{s}=\frac{[hash(M)+xd]G}{s}=rG$
 
-思路: 使用对外隐藏的临时密钥r, 将*私钥d对哈希值的签名 $hash(M)+d$* 加密, 同时公开临时公钥$[r]G$. 
-这样敌手即不能从签名推断出私钥d(不知r), 也不能伪造签名(不知d).
-
-x?
+> 分析见[Elgamal协议](../Elgamal协议.md), 该方案和Elgamal签名协议基本一致
 
 ### 与RSA对比
 
