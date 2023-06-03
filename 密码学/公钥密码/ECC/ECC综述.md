@@ -27,19 +27,19 @@ ECDH (Elliptic Curve Diffie-Hellman Protocol) 基于ECC实现的DH密钥交换�
 设私钥$d$, 公钥$P=[d]G$, 基点G
 
 私钥签名:  
-- 选择随机数r, 计算$[r]G$. 其中 $r\in [1,\ n-1]$, n为G的阶
-- 令 $x,y=[r]G$, 若 $x=0\pmod n$, 则重选r
-- $s=r^{-1}(hash(M)+dx)$. 其中, M代表消息. 若 $s=0\pmod n$, 则重选r
+- 选择随机数 $k$, 计算$[k]G$. 其中 $k\in [1,\ n-1]$, n为G的阶
+- 令 $x,y=[k]G$, 若 $x=0\pmod n$, 则重选 $k$
+- $s=k^{-1}(hash(M)+dx)$. 其中, M代表消息. 若 $s=0\pmod n$, 则重选 $k$
 - 将消息M 和 签名$\{\ x, s\ \}$ 发送
 
 公钥验签:
-- 检查 $r,\ s\in [1,\ n-1]$
+- 检查 $x,\ s\in [1,\ n-1]$
 - 计算 $x',\ y' = s^{-1}([hash(M)]G+[x]P)$
 - 验证 $x'\equiv x$
 
-原理: $\frac{[hash(M)]G+[x]P}{s}=\frac{[hash(M)+xd]G}{s}=rG$
+原理: $\frac{[hash(M)]G+[x]P}{s}=\frac{[hash(M)+xd]G}{s}=[k]G$
 
-> 分析见[Elgamal协议](../Elgamal协议.md), 该方案和Elgamal签名协议基本一致
+> 分析见[Elgamal协议](../Elgamal协议.md). SM2验证方式类似ElGamal; ECDSA构造s方式和ElGamal类似, 但由于签名中已无法恢复出 $[k]G$, 所以采用了Schnorr协议的验证 $k$ (而不是m)的方式.
 
 ### 与RSA对比
 

@@ -1,10 +1,10 @@
 > 详见 [国密文档-SM2公钥密码体制](../../文档/SM2-ecc-zh.pdf)
 
-## SM2公钥加密
+## SM2 公钥加密
 
 注意**SM2和ECC-Elgamal的区别**:  
 
-SM2生成$C_{1}$, $C_{2}$, $C_{3}$三个密文:  
+SM2生成 $C_{1}$, $C_{2}$, $C_{3}$三个密文:  
 $C_{1}=[r]G$  
 $C_{2}=M\oplus kdf(\ x \mid\mid y\ )$, $(x, y)=[r]Pk=[Sk][r]G$  
 $C_{3}=hash(\ x\mid\mid M\mid\mid y\ )$, 用于验证
@@ -15,7 +15,7 @@ $C_{3}=hash(\ x\mid\mid M\mid\mid y\ )$, 用于验证
 
 <br>
 
-## SM2密钥协商
+## SM2 密钥协商
 
 
 SM2密钥协商基于[ECDH](../Diffie-Hellman密钥交换.md), 额外引入了随机数$r$进行协商, 假设私钥$d$, 公钥$P$.
@@ -99,3 +99,5 @@ Function Decrypt(c, klen, d):
 		Error():
 	return m
 ```
+
+## SM2 数字签名

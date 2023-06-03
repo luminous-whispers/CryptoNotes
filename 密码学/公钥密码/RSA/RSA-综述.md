@@ -5,24 +5,22 @@ RSA公钥体系基于大素数分解的NPC困难问题：
 如果其可被分解为两素数(记为素数p、q); 并且存在e和$\phi(N)$互素 (记, d是e关于模$\phi(N)$的逆元)。
 那么 $x^{e}\equiv c\ \   (mod\; N)$ 有解 $x\equiv c^{d}\ \ (mod\; N)$**
 
-> 区别加密和签名的概念可以参见: [RSA签名和加密](RSA签名和加密.md)
+> 区别加密和签名的概念可以参见: [RSA-签名和加密](RSA-签名和加密.md)
 
-### 1 加解密原理
+### 1 加解密
 
-- 场景：A需要给B发送加密信息，但A似乎不方便保存密码。
-- 加密通讯流程:
-  1. B方生成密钥, 在公共频道公开公钥对(e, N), 自己保留私钥d
-  2. A方接收公钥对(e, N), 对自己要发送给B的消息msg进行加密: $cipher \equiv msg^{e}\;(mod\ N)$, 并发送给B
-  3. B接收到密文cipher，进行解密：$msg \equiv cipher^{d}\ (mod\ N)$
+1. B在公共频道公开公钥对(e, N), 保留私钥d
+2. A接收公钥对(e, N), 对要发送给B的消息msg加密: $c \equiv m^{e}\;(mod\ N)$, 并发送给B
+3. B接收到密文c，进行解密：$m \equiv c^{d}\ (mod\ N)$
 
-### 2 数字签名原理
+### 2 数字签名
 
-- 场景：A需要给B发送消息，消息不怕泄露，但害怕被篡改。换言之，通过数字签名，可以防止消息被篡改，但消息本身对攻击者也是可见的。
-- 签名通讯流程: 
-  1. A方生成密钥, 在公共频道公开公钥(e, N), 自己保留私钥d
-  2. A方对消息msg进行加签, 以防篡改: $signature \equiv msg^{d}\; (mod\ N)$, 并将签名和消息本身(signature, msg)都发送给B
-  3. B通过公钥e进行验签, 即检验signature验签结果是否和msg一致, 如果一致就说明msg未被篡改: $msg' \equiv signature^{d}\; (mod\ N)$, check $msg'\equiv msg$
-     
+1. A生成密钥, 在公共频道公开公钥(e, N), 自己保留私钥d
+2. A对消息msg加签, 以防篡改: $s \equiv m^{d}\; (mod\ N)$, 并将(s, m)发送给B
+3. B用公钥e验签, 即检验s验签结果是否和m一致 $m' \equiv s^{d}\; (mod\ N)$, 检查 $m'\equiv m$
+
+签名中m虽然公开, 但只有A有能力生成s
+
 ### 3 算法加速
 
 #### 利用p、q加速解密
@@ -55,4 +53,4 @@ $$d*e \equiv 1\ (mod\ (p-1)*(q-1)) \Longleftrightarrow d*e\equiv 1\ (mod\ \frac{
 
 ### 4 安全性分析
 
-> 参考[合数分解](attack/合数分解.md)
+> 参考[RSA-合数分解](RSA-攻击/RSA-合数分解.md) 与各类 `./RSA 攻击/`
