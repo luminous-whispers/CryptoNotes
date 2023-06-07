@@ -2,7 +2,7 @@
 > [Diffie, W.; Hellman, M. -- New directions in cryptography](https://drive.google.com/open?id=1ROHVZjHb6rskYYETAOaYdIpj7cqmszsX)
 
 DH算法是第一个公开的非对称加密算法, 但只被设计用于密钥交换, 没有实现加密.   
-DH算法安全性基于**[有限域离散对数困难问题](../../代数/欧拉定理.md)**
+DH算法安全性基于**[有限域离散对数困难问题](../../代数/数论/欧拉定理.md)**
 
 #重点
 
