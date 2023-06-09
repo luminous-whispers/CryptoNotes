@@ -1,5 +1,4 @@
-LFSR: 线性反馈移位寄存器
-
+求LFSR的算法:
 
 ### Berlekamp-Massey算法的简化步骤：
 
