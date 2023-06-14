@@ -1,19 +1,15 @@
 ## RSA密码体系
-RSA公钥体系基于大素数分解的NPC困难问题, 构造原理如:
+RSA公钥体系基于大数分解的NPC困难问题, 构造原理如:
 
-**对于大素数N，
-如果其可被分解为两素数(记为素数p、q); 并且存在e和$\phi(N)$互素 (记, d是e关于模$\phi(N)$的逆元)。
-那么 $x^{e}\equiv c\ \   (mod\; N)$ 有解 $x\equiv c^{d}\ \ (mod\; N)$**
+==对于大数$N=p\times q$, 其中 $p,q$ 为素数, 存在 $gcd(e,\ \phi(N))=1$, $d=e^{-1}\pmod{N}$,   
+那么 $x^{e}\equiv c\ \   (mod\; N)$ 有解 $x\equiv c^{d}\ \ (mod\; N)$.==
 
 ### 1 加解密
 
-1. B在公共频道公开公钥对(e, N), 保留私钥d
-2. A接收公钥对(e, N), 对要发送给B的消息msg加密: $c \equiv m^{e}\;(mod\ N)$, 并发送给B
-3. B接收到密文c，进行解密：$m \equiv c^{d}\ (mod\ N)$
+1. 加密算法: $C=M^{e}\pmod n$, 其中 $(e,n)$ 为公钥
+2. 解密算法: $M=C^{d}\pmod n$, 其中 $d$ 为私钥
 
 ![|500](../../../attach/Pasted%20image%2020230420135629.png)
-
-因为RSA在加解密的时候, 有长度限制, 应该采用分段式加解密.
 
 ### 2 数字签名
 
@@ -23,36 +19,50 @@ RSA公钥体系基于大素数分解的NPC困难问题, 构造原理如:
 
 ### 3 算法加速
 
-#### 利用p、q加速解密
+#### 3.1 利用p、q加速解密
 
-利用已知信息p、q加速算法解密信息的过程。这是因为通常d相对e来说比较大，因此解密成本比加密成本高。
-优化步骤：
+利用已知 $p$ 和 $q$ 加速算法解密速度. 一般RSA的私钥 $d$ 比公钥 $e$ 大很多, 所以解密成本更高.  
+优化步骤:
 
-1. 利用N=q\*p，将解密等式化简为方程组
-   $m \equiv c^{d}\ (mod\ N)$
+1. 利用 $N=p\times q$, 将 $m \equiv c^{d}\ (mod\ N)$ 化为方程组, 并用费马定理化简指数.
 
-$\Longleftrightarrow\begin{cases}m_{1}\equiv c^{d}\ (mod\ p)\\m_{2}\equiv c^{d}\ (mod\ q)\end{cases}$
+$\Leftrightarrow\begin{cases}V_{p}\equiv c^{d}\ (mod\ p)\\V_{q}\equiv c^{d}\ (mod\ q)\end{cases}$
 
-$\Longleftrightarrow\begin{cases}m_{1}\equiv (c\ \ mod\,p )^{d\ (mod\;p-1)}\ (mod\ p)\\m_{2}\equiv (c\ \ mod\,q)^{d\ (mod\;p-1)}\ (mod\ q)\end{cases}$
+$\Leftrightarrow\begin{cases}V_{p}\equiv (c\ \ mod\,p )^{d\ (mod\;p-1)}\ (mod\ p)\\V_{q}\equiv (c\ \ mod\,q)^{d\ (mod\;p-1)}\ (mod\ q)\end{cases}$
 
 2. 利用**中国剩余定理**计算方程组
    
-   >  见[中国剩余定理](../../../代数/数论/中国剩余定理.md)
+>  原理见[中国剩余定理](../../../代数/数论/中国剩余定理.md)
+   
+定义 $X_{p}=q*(q^{-1}\pmod p)$, $X_{q}=p*(p^{-1}\pmod q)$,
 
-#### 等效模数
+所以 $m=V_{p}X_{p}+V_{q}X_{q}\pmod n$.
 
-求解d时, 可以利用等效的模数加速求逆. 这基于以下的推论:
-$$d*e \equiv 1\ (mod\ (p-1)*(q-1)) \Longleftrightarrow d*e\equiv 1\ (mod\ \frac{(p-1)*(q-1)}{g})$$
-其中, $g\ =\ Gcd(p-1,\ q-1)$
-两者d等效, 但比正常方法求得的d小, 计算时速度更快. 这也说明了, d不是对模数唯一的.
-*(当然, 代价是密钥d安全性也下降了, 所以当g过大时, 需要重新选择合适的pq, 防止d过小)*
+PS, $d\pmod{p-1}$ 和 $X_p$ 等都可以预先计算.
 
-#### 数学加速
-- 见[扩展欧几里得算法](../../../代数/数论/扩展欧几里得算法.md)求最大公因子和逆元
-- 见[快速模幂算法](../../../代数/数论/快速模幂算法.md)
+#### 3.2 等效模数
+
+因为 $\begin{cases}m^{(p-1)(q-1)/g}\equiv (m^{p-1})^{(q-1)/g}\equiv1\pmod{p} \\ m^{(p-1)(q-1)/g}\equiv (m^{q-1})^{(p-1)/g}\equiv1\pmod{q} \end{cases}$, 
+
+所以 $m^{\frac{(p-1)\times(q-1)}{g}}\equiv 1\pmod{p\times q}$, 其中 $g=gcd(\ p-1,\ q-1\ )$, 
+
+所以对于 $d'$ 满足: $d'\times e\equiv 1\pmod{\frac{(p-1)\times (q-1)}{g}}$, 有 $m^{d'\times e}\equiv m^{1+k\cdot\frac{(p-1)\times(q-1)}{g}}\equiv m\pmod{p\times q}$.
+
+可见, $d'$ 和原私钥是**等效**的, 但值更小, 计算速度更快.   
+当然, 代价是安全性下降, 因此应避免 $g=gcd(p-1,\ q-1)$ 过大, 防止存在较小等效私钥 $d'$, 缩小密钥空间.
+
+#### 更多相关数学算法
+
+- [扩展欧几里得算法](../../../代数/数论/扩展欧几里得算法.md)求最大公因子和逆元
+- [快速模幂算法](../../../代数/数论/快速模幂算法.md)求指数运算
+- [米勒罗宾方法](../../../代数/数论/素性检测-米勒罗宾方法.md)判断素数
 
 ### 4 安全性分析
 
 安全性分析见 [RSA-合数分解](RSA-攻击/RSA-合数分解.md)
 
 教科书式RSA不安全, 攻击者易[篡改明文](RSA-攻击/RSA-篡改攻击.md). 需要引入合理的填充, 如[OAEP填充](OAEP填充.md).
+
+### 5 RSA 实现
+
+明文数据需要分组加密, 每组长度i, 应满足 $2^{i}<n\leq 2^{i+1}$
