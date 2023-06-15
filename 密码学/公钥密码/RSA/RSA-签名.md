@@ -50,3 +50,4 @@ $$A\longrightarrow E_{SK_{A}} \longrightarrow E_{PK_{B}}\longrightarrow D_{SK_{B
 
 > 中间人攻击还可以通过[篡改消息](./RSA-攻击/RSA-篡改攻击)的方式进行.
 
+==对于教科书式RSA, 的先加密还是先签名都是一样的,  $(m^{d_{A}})^{e_{B}}=(m^{e_{B}})^{d_{A}}$...==

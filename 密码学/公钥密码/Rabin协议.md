@@ -23,7 +23,7 @@ x^{2}\equiv c\pmod{q}
 由 $c$ 是模 $p$ 的[二次剩余](../../代数/数论/二次剩余.md), 知 $\left( \frac{c}{p} \right)\equiv c^{\frac{p-1}{2}}\equiv 1\pmod p$.
 
 由 $( c^{\frac{p+1}{4}} )^{2}\equiv ( m^{\frac{p+1}{2}} )^{2}\equiv (m^{2})^{\frac{p+1}{2}}\equiv c^{\frac{p-1}{2}}\cdot c\equiv c\pmod p$, 知:  
-$c^{\frac{p+1}{4}}$ 和 $p-c^{\frac{q+1}{4}}$ 是方程 $x^{2}\equiv c\pmod p$ 的两根. 对 $q$ 同理.
+$c^{\frac{p+1}{4}}$ 和 $p-c^{\frac{p+1}{4}}$ 是方程 $x^{2}\equiv c\pmod p$ 的两根. 对 $q$ 同理.
 
 所以方程可解出四组同余方程:  
 
